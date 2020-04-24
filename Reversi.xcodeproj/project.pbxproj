@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		969298D324531BC100684DB5 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969298D224531BC100684DB5 /* GameState.swift */; };
-		969298D624531BDE00684DB5 /* SaveStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969298D524531BDE00684DB5 /* SaveStatusManager.swift */; };
+		969298D624531BDE00684DB5 /* GameStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969298D524531BDE00684DB5 /* GameStateRepository.swift */; };
 		969298DA24531CD300684DB5 /* Optional+Extenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969298D924531CD300684DB5 /* Optional+Extenstion.swift */; };
 		D636B39F23D35043007F370F /* DiskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D636B39E23D35043007F370F /* DiskView.swift */; };
 		D642BDB423A9FE4500396732 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D642BDB323A9FE4500396732 /* AppDelegate.swift */; };
@@ -35,7 +35,7 @@
 
 /* Begin PBXFileReference section */
 		969298D224531BC100684DB5 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
-		969298D524531BDE00684DB5 /* SaveStatusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStatusManager.swift; sourceTree = "<group>"; };
+		969298D524531BDE00684DB5 /* GameStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateRepository.swift; sourceTree = "<group>"; };
 		969298D924531CD300684DB5 /* Optional+Extenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extenstion.swift"; sourceTree = "<group>"; };
 		D636B39E23D35043007F370F /* DiskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskView.swift; sourceTree = "<group>"; };
 		D642BDB023A9FE4500396732 /* Reversi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reversi.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,7 +75,7 @@
 		969298D424531BD100684DB5 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				969298D524531BDE00684DB5 /* SaveStatusManager.swift */,
+				969298D524531BDE00684DB5 /* GameStateRepository.swift */,
 			);
 			name = Manager;
 			sourceTree = "<group>";
@@ -261,7 +261,7 @@
 				D642BDDC23AA137C00396732 /* BoardView.swift in Sources */,
 				969298D324531BC100684DB5 /* GameState.swift in Sources */,
 				D642BDB423A9FE4500396732 /* AppDelegate.swift in Sources */,
-				969298D624531BDE00684DB5 /* SaveStatusManager.swift in Sources */,
+				969298D624531BDE00684DB5 /* GameStateRepository.swift in Sources */,
 				D642BDB623A9FE4500396732 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

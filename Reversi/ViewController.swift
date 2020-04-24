@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     
     private var playerCancellers: [Disk: Canceller] = [:]
     
-    private let saveStatusManager = SaveStatusManager()
+    private let gameStateRepository = GameStateRepository()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         boardView.delegate = self
         messageDiskSize = messageDiskSizeConstraint.constant
         
-        saveStatusManager.loadGame(boardWidth: boardView.width, boardHeight: boardView.height) { result in
+        gameStateRepository.loadGame(boardWidth: boardView.width, boardHeight: boardView.height) { result in
             switch result {
                 case .success(let status):
                     reflectBoardBySavedState(status: status)
@@ -197,7 +197,7 @@ extension ViewController {
                 cleanUp()
 
                 completion?(isFinished)
-                try? self.saveStatusManager.saveGame(status: .builder(turn: self.turn, boardView: self.boardView, playerControls: self.playerControls))
+                try? self.gameStateRepository.saveGame(status: .builder(turn: self.turn, boardView: self.boardView, playerControls: self.playerControls))
 
                 self.updateCountLabels()
             }
@@ -209,7 +209,7 @@ extension ViewController {
                     self.boardView.setDisk(disk, atX: x, y: y, animated: false)
                 }
                 completion?(true)
-                try? self.saveStatusManager.saveGame(status: .builder(turn: self.turn, boardView: self.boardView, playerControls: self.playerControls))
+                try? self.gameStateRepository.saveGame(status: .builder(turn: self.turn, boardView: self.boardView, playerControls: self.playerControls))
                 self.updateCountLabels()
             }
         }
@@ -258,7 +258,7 @@ extension ViewController {
         updateMessageViews()
         updateCountLabels()
         
-        try? saveStatusManager.saveGame(status: .builder(turn: turn, boardView: boardView, playerControls: playerControls))
+        try? gameStateRepository.saveGame(status: .builder(turn: turn, boardView: boardView, playerControls: playerControls))
     }
     
     /// プレイヤーの行動を待ちます。
@@ -396,7 +396,7 @@ extension ViewController {
     @IBAction func changePlayerControlSegment(_ sender: UISegmentedControl) {
         let side: Disk = Disk(index: playerControls.firstIndex(of: sender)!)
         
-        try? saveStatusManager.saveGame(status: .builder(turn: turn, boardView: boardView, playerControls: playerControls))
+        try? gameStateRepository.saveGame(status: .builder(turn: turn, boardView: boardView, playerControls: playerControls))
         
         if let canceller = playerCancellers[side] {
             canceller.cancel()

@@ -1,5 +1,5 @@
 //
-//  SaveStatusManager.swift
+//  GameStateRepository.swift
 //  Reversi
 //
 //  Created by 秋勇紀 on 2020/04/24.
@@ -9,7 +9,7 @@
 import Foundation
 
 
-class SaveStatusManager {
+class GameStateRepository {
     
     enum FileIOError: Error {
         case write(path: String, cause: Error?)
