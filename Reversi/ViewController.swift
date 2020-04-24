@@ -63,8 +63,8 @@ extension ViewController {
     
     func reflectBoardBySavedState(status: GameState) {
         turn = status.turn
-        for control in status.playerControls {
-            playerControls[control.key].selectedSegmentIndex = control.value
+        for side in Disk.sides {
+            playerControls[side.index].selectedSegmentIndex = status.playerControls[side.index]
         }
         
         for x in 0 ..< status.board.count {
@@ -197,7 +197,8 @@ extension ViewController {
                 cleanUp()
 
                 completion?(isFinished)
-                try? self.saveGame()
+                try? self.saveStatusManager.saveGame(status: .builder(turn: self.turn, boardView: self.boardView, playerControls: self.playerControls))
+
                 self.updateCountLabels()
             }
         } else {
@@ -208,7 +209,7 @@ extension ViewController {
                     self.boardView.setDisk(disk, atX: x, y: y, animated: false)
                 }
                 completion?(true)
-                try? self.saveGame()
+                try? self.saveStatusManager.saveGame(status: .builder(turn: self.turn, boardView: self.boardView, playerControls: self.playerControls))
                 self.updateCountLabels()
             }
         }
@@ -257,7 +258,7 @@ extension ViewController {
         updateMessageViews()
         updateCountLabels()
         
-        try? saveGame()
+        try? saveStatusManager.saveGame(status: .builder(turn: turn, boardView: boardView, playerControls: playerControls))
     }
     
     /// プレイヤーの行動を待ちます。
@@ -395,7 +396,7 @@ extension ViewController {
     @IBAction func changePlayerControlSegment(_ sender: UISegmentedControl) {
         let side: Disk = Disk(index: playerControls.firstIndex(of: sender)!)
         
-        try? saveGame()
+        try? saveStatusManager.saveGame(status: .builder(turn: turn, boardView: boardView, playerControls: playerControls))
         
         if let canceller = playerCancellers[side] {
             canceller.cancel()
@@ -420,42 +421,6 @@ extension ViewController: BoardViewDelegate {
         try? placeDisk(turn, atX: x, y: y, animated: true) { [weak self] _ in
             self?.nextTurn()
         }
-    }
-}
-
-// MARK: Save and Load
-
-extension ViewController {
-    private var path: String {
-        (NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first! as NSString).appendingPathComponent("Game")
-    }
-    
-    /// ゲームの状態をファイルに書き出し、保存します。
-    func saveGame() throws {
-        var output: String = ""
-        output += turn.symbol
-        for side in Disk.sides {
-            output += playerControls[side.index].selectedSegmentIndex.description
-        }
-        output += "\n"
-        
-        for y in boardView.yRange {
-            for x in boardView.xRange {
-                output += boardView.diskAt(x: x, y: y).symbol
-            }
-            output += "\n"
-        }
-        
-        do {
-            try output.write(toFile: path, atomically: true, encoding: .utf8)
-        } catch let error {
-            throw FileIOError.read(path: path, cause: error)
-        }
-    }
-    
-    enum FileIOError: Error {
-        case write(path: String, cause: Error?)
-        case read(path: String, cause: Error?)
     }
 }
 

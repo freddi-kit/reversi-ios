@@ -20,10 +20,33 @@ class SaveStatusManager {
         (NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first! as NSString).appendingPathComponent("Game")
     }
     
+    /// ゲームの状態をファイルに書き出し、保存します。
+    func saveGame(status: GameState) throws {
+        var output: String = ""
+        output += status.turn.symbol
+        for side in Disk.sides {
+            output += status.playerControls[side.index].description
+        }
+        output += "\n"
+        
+        for x in 0 ..< status.board.count {
+            for y in 0 ..< status.board[x].count {
+                output += status.board[x][y].symbol
+            }
+            output += "\n"
+        }
+        
+        do {
+            try output.write(toFile: path, atomically: true, encoding: .utf8)
+        } catch let error {
+            throw FileIOError.write(path: path, cause: error)
+        }
+    }
+    
     func loadGame(boardWidth: Int, boardHeight: Int, completion: (Result<GameState, Error>) -> ()) {
         let input: String
         let state: GameState
-        var playerControls: [Int: Int] = [:]
+        var playerControls: [Int] = .init(repeating: 0, count: Disk.sides.count)
         var board: [[Disk?]] = [[]]
 
         do {
@@ -68,22 +91,22 @@ class SaveStatusManager {
         
         board = [[Disk?]](repeating: [Disk?](repeating: nil, count: boardWidth), count: boardHeight)
         
-        var y = 0
+        var x = 0
         while let line = lines.popFirst() {
-            var x = 0
+            var y = 0
             for character in line {
                 let disk = Disk?(symbol: "\(character)").flatMap { $0 }
                 board[x][y] = disk
-                x += 1
+                y += 1
             }
-            guard x == boardWidth else {
+            guard y == boardWidth else {
                 completion(.failure(FileIOError.read(path: path, cause: nil)))
                 return
             }
-            y += 1
+            x += 1
         }
         
-        guard y == boardHeight else {
+        guard x == boardHeight else {
             completion(.failure(FileIOError.read(path: path, cause: nil)))
             return
         }
