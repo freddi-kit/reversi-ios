@@ -32,10 +32,14 @@ class ViewController: UIViewController {
         boardView.delegate = self
         messageDiskSize = messageDiskSizeConstraint.constant
         
-        do {
-            try loadGame()
-        } catch _ {
-            newGame()
+        loadGame { result in
+            switch result {
+                case .success:
+                    updateMessageViews()
+                    updateCountLabels()
+                case .failure:
+                    newGame()
+            }
         }
     }
     
@@ -432,12 +436,21 @@ extension ViewController {
     }
     
     /// ゲームの状態をファイルから読み込み、復元します。
-    func loadGame() throws {
-        let input = try String(contentsOfFile: path, encoding: .utf8)
+    func loadGame(completion: (Result<Void, Error>) -> Void) {
+        let input: String
+       
+        do {
+            input = try String(contentsOfFile: path, encoding: .utf8)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        
         var lines: ArraySlice<Substring> = input.split(separator: "\n")[...]
         
         guard var line = lines.popFirst() else {
-            throw FileIOError.read(path: path, cause: nil)
+            completion(.failure(FileIOError.read(path: path, cause: nil)))
+            return
         }
         
         do { // turn
@@ -445,7 +458,8 @@ extension ViewController {
                 let diskSymbol = line.popFirst(),
                 let disk = Optional<Disk>(symbol: diskSymbol.description)
             else {
-                throw FileIOError.read(path: path, cause: nil)
+                completion(.failure(FileIOError.read(path: path, cause: nil)))
+                return
             }
             turn = disk
         }
@@ -457,14 +471,16 @@ extension ViewController {
                 let playerNumber = Int(playerSymbol.description),
                 let player = Player(rawValue: playerNumber)
             else {
-                throw FileIOError.read(path: path, cause: nil)
+                completion(.failure(FileIOError.read(path: path, cause: nil)))
+                return
             }
             playerControls[side.index].selectedSegmentIndex = player.rawValue
         }
 
         do { // board
             guard lines.count == boardView.height else {
-                throw FileIOError.read(path: path, cause: nil)
+                completion(.failure(FileIOError.read(path: path, cause: nil)))
+                return
             }
             
             var y = 0
@@ -476,17 +492,17 @@ extension ViewController {
                     x += 1
                 }
                 guard x == boardView.width else {
-                    throw FileIOError.read(path: path, cause: nil)
-                }
+                    completion(.failure(FileIOError.read(path: path, cause: nil)))
+                    return                }
                 y += 1
             }
             guard y == boardView.height else {
-                throw FileIOError.read(path: path, cause: nil)
+                completion(.failure(FileIOError.read(path: path, cause: nil)))
+                return
             }
         }
-
-        updateMessageViews()
-        updateCountLabels()
+        
+        completion(.success(()))
     }
     
     enum FileIOError: Error {
