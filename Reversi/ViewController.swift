@@ -26,15 +26,18 @@ class ViewController: UIViewController {
     
     private var playerCancellers: [Disk: Canceller] = [:]
     
+    private let saveStatusManager = SaveStatusManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         boardView.delegate = self
         messageDiskSize = messageDiskSizeConstraint.constant
         
-        loadGame { result in
+        saveStatusManager.loadGame(boardWidth: boardView.width, boardHeight: boardView.height) { result in
             switch result {
-                case .success:
+                case .success(let status):
+                    reflectBoardBySavedState(status: status)
                     updateMessageViews()
                     updateCountLabels()
                 case .failure:
@@ -56,6 +59,21 @@ class ViewController: UIViewController {
 // MARK: Reversi logics
 
 extension ViewController {
+    
+    
+    func reflectBoardBySavedState(status: GameState) {
+        turn = status.turn
+        for control in status.playerControls {
+            playerControls[control.key].selectedSegmentIndex = control.value
+        }
+        
+        for x in 0 ..< status.board.count {
+            for y in 0 ..< status.board[x].count {
+                boardView.setDisk(status.board[x][y], atX: x, y: y, animated: false)
+            }
+        }
+    }
+    
     /// `side` で指定された色のディスクが盤上に置かれている枚数を返します。
     /// - Parameter side: 数えるディスクの色です。
     /// - Returns: `side` で指定された色のディスクの、盤上の枚数です。
@@ -435,76 +453,6 @@ extension ViewController {
         }
     }
     
-    /// ゲームの状態をファイルから読み込み、復元します。
-    func loadGame(completion: (Result<Void, Error>) -> Void) {
-        let input: String
-       
-        do {
-            input = try String(contentsOfFile: path, encoding: .utf8)
-        } catch {
-            completion(.failure(error))
-            return
-        }
-        
-        var lines: ArraySlice<Substring> = input.split(separator: "\n")[...]
-        
-        guard var line = lines.popFirst() else {
-            completion(.failure(FileIOError.read(path: path, cause: nil)))
-            return
-        }
-        
-        do { // turn
-            guard
-                let diskSymbol = line.popFirst(),
-                let disk = Optional<Disk>(symbol: diskSymbol.description)
-            else {
-                completion(.failure(FileIOError.read(path: path, cause: nil)))
-                return
-            }
-            turn = disk
-        }
-
-        // players
-        for side in Disk.sides {
-            guard
-                let playerSymbol = line.popFirst(),
-                let playerNumber = Int(playerSymbol.description),
-                let player = Player(rawValue: playerNumber)
-            else {
-                completion(.failure(FileIOError.read(path: path, cause: nil)))
-                return
-            }
-            playerControls[side.index].selectedSegmentIndex = player.rawValue
-        }
-
-        do { // board
-            guard lines.count == boardView.height else {
-                completion(.failure(FileIOError.read(path: path, cause: nil)))
-                return
-            }
-            
-            var y = 0
-            while let line = lines.popFirst() {
-                var x = 0
-                for character in line {
-                    let disk = Disk?(symbol: "\(character)").flatMap { $0 }
-                    boardView.setDisk(disk, atX: x, y: y, animated: false)
-                    x += 1
-                }
-                guard x == boardView.width else {
-                    completion(.failure(FileIOError.read(path: path, cause: nil)))
-                    return                }
-                y += 1
-            }
-            guard y == boardView.height else {
-                completion(.failure(FileIOError.read(path: path, cause: nil)))
-                return
-            }
-        }
-        
-        completion(.success(()))
-    }
-    
     enum FileIOError: Error {
         case write(path: String, cause: Error?)
         case read(path: String, cause: Error?)
@@ -558,32 +506,6 @@ extension Disk {
         switch self {
         case .dark: return 0
         case .light: return 1
-        }
-    }
-}
-
-extension Optional where Wrapped == Disk {
-    fileprivate init?<S: StringProtocol>(symbol: S) {
-        switch symbol {
-        case "x":
-            self = .some(.dark)
-        case "o":
-            self = .some(.light)
-        case "-":
-            self = .none
-        default:
-            return nil
-        }
-    }
-    
-    fileprivate var symbol: String {
-        switch self {
-        case .some(.dark):
-            return "x"
-        case .some(.light):
-            return "o"
-        case .none:
-            return "-"
         }
     }
 }

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		969298D324531BC100684DB5 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969298D224531BC100684DB5 /* GameState.swift */; };
+		969298D624531BDE00684DB5 /* SaveStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969298D524531BDE00684DB5 /* SaveStatusManager.swift */; };
+		969298DA24531CD300684DB5 /* Optional+Extenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969298D924531CD300684DB5 /* Optional+Extenstion.swift */; };
 		D636B39F23D35043007F370F /* DiskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D636B39E23D35043007F370F /* DiskView.swift */; };
 		D642BDB423A9FE4500396732 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D642BDB323A9FE4500396732 /* AppDelegate.swift */; };
 		D642BDB623A9FE4500396732 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D642BDB523A9FE4500396732 /* SceneDelegate.swift */; };
@@ -31,6 +34,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		969298D224531BC100684DB5 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		969298D524531BDE00684DB5 /* SaveStatusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStatusManager.swift; sourceTree = "<group>"; };
+		969298D924531CD300684DB5 /* Optional+Extenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extenstion.swift"; sourceTree = "<group>"; };
 		D636B39E23D35043007F370F /* DiskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskView.swift; sourceTree = "<group>"; };
 		D642BDB023A9FE4500396732 /* Reversi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reversi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D642BDB323A9FE4500396732 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +72,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		969298D424531BD100684DB5 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				969298D524531BDE00684DB5 /* SaveStatusManager.swift */,
+			);
+			name = Manager;
+			sourceTree = "<group>";
+		};
+		969298D724531CB800684DB5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				969298D924531CD300684DB5 /* Optional+Extenstion.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		D636B3A123D43203007F370F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				D642BDD723AA0B5700396732 /* Disk.swift */,
+				969298D224531BC100684DB5 /* GameState.swift */,
 			);
 			name = DataTypes;
 			sourceTree = "<group>";
@@ -105,6 +128,8 @@
 		D642BDB223A9FE4500396732 /* Reversi */ = {
 			isa = PBXGroup;
 			children = (
+				969298D724531CB800684DB5 /* Extensions */,
+				969298D424531BD100684DB5 /* Manager */,
 				D642BDB323A9FE4500396732 /* AppDelegate.swift */,
 				D642BDB523A9FE4500396732 /* SceneDelegate.swift */,
 				D642BDB723A9FE4500396732 /* ViewController.swift */,
@@ -232,8 +257,11 @@
 				D642BDD623AA0B3900396732 /* CellView.swift in Sources */,
 				D642BDD823AA0B5700396732 /* Disk.swift in Sources */,
 				D642BDB823A9FE4500396732 /* ViewController.swift in Sources */,
+				969298DA24531CD300684DB5 /* Optional+Extenstion.swift in Sources */,
 				D642BDDC23AA137C00396732 /* BoardView.swift in Sources */,
+				969298D324531BC100684DB5 /* GameState.swift in Sources */,
 				D642BDB423A9FE4500396732 /* AppDelegate.swift in Sources */,
+				969298D624531BDE00684DB5 /* SaveStatusManager.swift in Sources */,
 				D642BDB623A9FE4500396732 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
